@@ -7,6 +7,7 @@ import (
 //	"webapp/utils" 
 	"internal/utils" 
 	"internal/web/controllers"
+	"internal/web/rest/controllers"
 	
 //	"webapp/persistence/dao"
 //	"webapp/persistence/bolt"
@@ -41,6 +42,7 @@ func main() {
 
 	log.Print("Setting application handlers... ")
 	controllers.InitControllers()
+	restcontrollers.InitRESTControllers()
 
 	// Launch the http server
 	log.Print("Launching http server (port=" + webPort + ") ... ")
