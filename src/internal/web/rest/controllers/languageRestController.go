@@ -36,8 +36,13 @@ func (this *LanguageRestController) Process(w http.ResponseWriter, r *http.Reque
 	switch r.Method {
 	case "GET":
 		this.processGET(w, r)
-		//	case "POST":
-		//	    this.processPost(w,r)
+	case "POST":
+	    this.processPOST(w,r)
+	case "PUT":
+	    this.processPUT(w,r)
+	case "DELETE":
+		this.processDELETE(w, r)
+		
 	default:
 //		webutil.ErrorPage(w, "Method "+r.Method+" is not supported")
 		http.Error(w, "", http.StatusBadRequest)
@@ -90,6 +95,36 @@ func (this *LanguageRestController) getById(w http.ResponseWriter, r *http.Reque
 	if ( data != nil ) {
 		WriteJSON(w, data)
 	} else {
-		ReplyStatusNotFound(w)
+		ReplyNotFound(w)
+	}
+}
+
+func (this *LanguageRestController) processPOST(w http.ResponseWriter, r *http.Request) {
+	log.Debug("processPOST - URL path : " + r.URL.Path)
+	// TODO
+	ReplyNotImplemented(w)
+}
+
+func (this *LanguageRestController) processPUT(w http.ResponseWriter, r *http.Request) {
+	log.Debug("processPUT - URL path : " + r.URL.Path)
+	// TODO
+	ReplyNotImplemented(w)
+}
+
+func (this *LanguageRestController) processDELETE(w http.ResponseWriter, r *http.Request) {
+	log.Debug("processDELETE - URL path : " + r.URL.Path)
+	
+	// get key
+	parts := strings.Split(r.URL.Path, "/")
+	n := this.uriPartsCount
+	k1 := parts[n] 
+//	k2 := parts[n+1]
+
+	// get data
+	log.Debug("deleteById - dao.Delete : " + k1 )
+	if ( this.dao.Delete(k1) ) {
+		ReplyDeleted(w)
+	} else {
+		ReplyNotDeleted(w)
 	}
 }
