@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"strings"
 
-//	"internal/entities"
+	"internal/entities"
 	"internal/log"
 	"internal/persistence"
 	"internal/persistence/dao"
@@ -65,15 +65,6 @@ func (this *LanguageRestController) getAll(w http.ResponseWriter, r *http.Reques
 	// get data
 	data := this.dao.FindAll()
 
-//	jsonData, err := json.Marshal(data)
-//	if err != nil {
-//		http.Error(w, err.Error(), http.StatusInternalServerError)
-//		return
-//	}
-//
-//	w.Header().Set("Content-Type", "application/json")
-//	w.Write(jsonData)
-	
 	WriteJSON(w, data) 
 }
 
@@ -101,14 +92,36 @@ func (this *LanguageRestController) getById(w http.ResponseWriter, r *http.Reque
 
 func (this *LanguageRestController) processPOST(w http.ResponseWriter, r *http.Request) {
 	log.Debug("processPOST - URL path : " + r.URL.Path)
-	// TODO
-	ReplyNotImplemented(w)
+
+	// 
+	entity := entities.NewLanguage() 
+	//err := json.Unmarshal(jsonData, &language)
+	err := ReadJSON(&entity, r)
+	if err != nil {
+		ReplyBadRequest(w)
+	}
+
+	if ( this.dao.Create(entity) ) {
+		ReplyCreated(w)
+	} else {
+		ReplyNotCreated(w)
+	}
 }
 
 func (this *LanguageRestController) processPUT(w http.ResponseWriter, r *http.Request) {
 	log.Debug("processPUT - URL path : " + r.URL.Path)
-	// TODO
-	ReplyNotImplemented(w)
+	
+	entity := entities.NewLanguage() 
+	err := ReadJSON(&entity, r)
+	if err != nil {
+		ReplyBadRequest(w)
+	}
+
+	if ( this.dao.Update(entity) ) {
+		ReplyUpdated(w)
+	} else {
+		ReplyNotUpdated(w)
+	}
 }
 
 func (this *LanguageRestController) processDELETE(w http.ResponseWriter, r *http.Request) {
