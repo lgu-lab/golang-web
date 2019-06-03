@@ -1,11 +1,11 @@
-package controllers
+package mvc
 
 import (
 	"log"
 	"net/http"
 	
 	"internal/entities"
-	"internal/webutil"
+//	"internal/webutil"
 	"internal/persistence"
 	"internal/persistence/dao"
 )
@@ -34,7 +34,7 @@ func (this *LanguageController) ListHandler(w http.ResponseWriter, r *http.Reque
 	if r.Method == "GET" {
 	    this.processList(w,r)
 	} else {
-	    webutil.ErrorPage(w, "Method "+r.Method+ " is not supported");
+	    ErrorPage(w, "Method "+r.Method+ " is not supported");
 	}
 }
 
@@ -47,7 +47,7 @@ func (this *LanguageController) FormHandler(w http.ResponseWriter, r *http.Reque
 	case "POST":
 	    this.processPost(w,r)
 	default:
-	    webutil.ErrorPage(w, "Method "+r.Method+ " is not supported");
+	    ErrorPage(w, "Method "+r.Method+ " is not supported");
 	}
 }
 
@@ -55,7 +55,7 @@ func (this *LanguageController) processList(w http.ResponseWriter, r *http.Reque
 	// get data
 	data := this.dao.FindAll()
 	// forward to view
-	webutil.Forward(w, "templates/languageList.gohtml", data)
+	Forward(w, "templates/languageList.gohtml", data)
 }
 
 func (this *LanguageController) processForm(w http.ResponseWriter, r *http.Request) {
@@ -63,7 +63,7 @@ func (this *LanguageController) processForm(w http.ResponseWriter, r *http.Reque
 	language := entities.Language{} // new entity with default values ( 'zero values' )
 	formData := this.newFormData(true, language)
 	
-	code := webutil.GetParameter(r, "code") 
+	code := GetParameter(r, "code") 
 	if  code != "" {
 		language := this.dao.Find(code)
 		if language != nil {
@@ -73,7 +73,7 @@ func (this *LanguageController) processForm(w http.ResponseWriter, r *http.Reque
 	} 
 	
 	// forward to view ( form page )
-	webutil.Forward(w, "templates/languageForm.gohtml", formData)
+	Forward(w, "templates/languageForm.gohtml", formData)
 }
 
 func (this *LanguageController) processPost(w http.ResponseWriter, r *http.Request) {
@@ -92,7 +92,7 @@ func (this *LanguageController) processPost(w http.ResponseWriter, r *http.Reque
     	case "update":
 			this.processUpdate(w,r)
     	default:
-	    	webutil.ErrorPage(w, "Unexpected action ")
+	    	ErrorPage(w, "Unexpected action ")
     }
 }
 
@@ -102,7 +102,7 @@ func (this *LanguageController)  processCreate(w http.ResponseWriter, r *http.Re
     language := this.buildLanguage(r)
 	this.dao.Create(language) 
 	formData := this.newFormData(false, language)
-	webutil.Forward(w, "templates/languageForm.gohtml", formData)
+	Forward(w, "templates/languageForm.gohtml", formData)
 }
 
 func (this *LanguageController)  processDelete(w http.ResponseWriter, r *http.Request) {
@@ -123,7 +123,7 @@ func (this *LanguageController)  processUpdate(w http.ResponseWriter, r *http.Re
     language := this.buildLanguage(r)
 	this.dao.Update(language) 
 	formData := this.newFormData(false, language)
-	webutil.Forward(w, "templates/languageForm.gohtml", formData)
+	Forward(w, "templates/languageForm.gohtml", formData)
 }
 
 func (this *LanguageController)  buildLanguage(r *http.Request) entities.Language {

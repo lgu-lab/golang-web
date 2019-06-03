@@ -1,4 +1,4 @@
-package controllers
+package mvc
 
 import (
 	"log"
@@ -6,7 +6,7 @@ import (
 	"strconv"
 	
 	"internal/entities"
-	"internal/webutil"
+//	"internal/webutil"
 	"internal/persistence"
 	"internal/persistence/dao"
 )
@@ -42,7 +42,7 @@ func (this *StudentController) ListHandler(w http.ResponseWriter, r *http.Reques
 	if r.Method == "GET" {
 	    this.processList(w,r)
 	} else {
-	    webutil.ErrorPage(w, "Method "+r.Method+ " is not supported");
+	    ErrorPage(w, "Method "+r.Method+ " is not supported");
 	}
 }
 
@@ -55,7 +55,7 @@ func (this *StudentController) FormHandler(w http.ResponseWriter, r *http.Reques
 	case "POST":
 	    this.processPost(w,r)
 	default:
-	    webutil.ErrorPage(w, "Method "+r.Method+ " is not supported");
+	    ErrorPage(w, "Method "+r.Method+ " is not supported");
 	}
 }
 
@@ -63,7 +63,7 @@ func (this *StudentController) processList(w http.ResponseWriter, r *http.Reques
 	// get data
 	data := this.dao.FindAll()
 	// forward to view ( list page )
-	webutil.Forward(w, "templates/studentList.gohtml", data)
+	Forward(w, "templates/studentList.gohtml", data)
 }
 
 func (this *StudentController) processForm(w http.ResponseWriter, r *http.Request) {
@@ -72,7 +72,7 @@ func (this *StudentController) processForm(w http.ResponseWriter, r *http.Reques
 	student := entities.NewStudent()
 	formData := this.NewStudentFormData(true, student)
 	
-	id := webutil.GetParameter(r, "id") 
+	id := GetParameter(r, "id") 
 	if  id != "" {
 		i, _ := strconv.Atoi(id)
 		student := this.dao.Find(i)
@@ -83,7 +83,7 @@ func (this *StudentController) processForm(w http.ResponseWriter, r *http.Reques
 	} 
 	
 	// forward to view ( form page )
-	webutil.Forward(w, "templates/studentForm.gohtml", formData)
+	Forward(w, "templates/studentForm.gohtml", formData)
 }
 
 func (this *StudentController) processPost(w http.ResponseWriter, r *http.Request) {
@@ -102,7 +102,7 @@ func (this *StudentController) processPost(w http.ResponseWriter, r *http.Reques
     	case "update":
 			this.processUpdate(w,r)
     	default:
-	    	webutil.ErrorPage(w, "Unexpected action ")
+	    	ErrorPage(w, "Unexpected action ")
     }
 }
 
@@ -114,7 +114,7 @@ func (this *StudentController)  processCreate(w http.ResponseWriter, r *http.Req
 
 	formData := this.NewStudentFormData(false, student)
 		
-	webutil.Forward(w, "templates/studentForm.gohtml", formData)
+	Forward(w, "templates/studentForm.gohtml", formData)
 }
 
 func (this *StudentController)  processDelete(w http.ResponseWriter, r *http.Request) {
@@ -138,7 +138,7 @@ func (this *StudentController)  processUpdate(w http.ResponseWriter, r *http.Req
 
 	formData := this.NewStudentFormData(false, student)
 	
-	webutil.Forward(w, "templates/studentForm.gohtml", formData)
+	Forward(w, "templates/studentForm.gohtml", formData)
 }
 
 func (this *StudentController)  buildStudent(r *http.Request) entities.Student {
@@ -147,10 +147,10 @@ func (this *StudentController)  buildStudent(r *http.Request) entities.Student {
 	log.Printf("buildStudent..." )
     
     student := entities.Student { 
-    	Id: webutil.FormGetParamAsInt(r, "id", 0),
+    	Id: FormGetParamAsInt(r, "id", 0),
     	FirstName: r.Form.Get("firstname"), 
     	LastName: r.Form.Get("lastname"), 
-    	Age: webutil.FormGetParamAsInt(r, "age", 0),
+    	Age: FormGetParamAsInt(r, "age", 0),
     	LanguageCode: r.Form.Get("languageCode") }
     
     //log.Printf("Student built : " + student.ToString() )

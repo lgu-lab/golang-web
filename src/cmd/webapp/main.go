@@ -4,10 +4,9 @@ import (
 	"log"
 	"net/http"
 	
-//	"webapp/utils" 
 	"internal/utils" 
-	"internal/web/controllers"
-	"internal/web/rest/controllers"
+	"internal/web/mvc"
+	"internal/web/rest"
 	
 //	"webapp/persistence/dao"
 //	"webapp/persistence/bolt"
@@ -34,15 +33,15 @@ func main() {
 	
 	log.Print("Starting server ... ")
 
-	utils.PrintEnv()
+	utils.PrintEnv() 
 
 	log.Print("Setting static file handler... ")
 	// Set handler to serve static files
 	http.HandleFunc("/", serveStaticFile)			
 
 	log.Print("Setting application handlers... ")
-	controllers.InitControllers()
-	restcontrollers.InitRESTControllers()
+	mvc.InitMvcControllers()
+	rest.InitRestControllers()
 
 	// Launch the http server
 	log.Print("Launching http server (port=" + webPort + ") ... ")

@@ -1,23 +1,10 @@
-package restcontrollers
+package rest
 
 import (
 	"net/http"
 	"encoding/json"
-	
-	//"internal/web/controllers"  // keep full path for "go build"
+
 )
-
-func InitRESTControllers() {
-
-	apiRoot := "/api/v1" 
-	
-	// Specific Paths with specific controllers 
-
-	languageRestController := NewLanguageRestController(apiRoot + "/language") 
-	http.HandleFunc( languageRestController.URI(), languageRestController.Process)
-	http.HandleFunc( languageRestController.URI()+"/", languageRestController.Process)
-
-}
 
 func WriteJSON(w http.ResponseWriter, data interface{}) {
 
@@ -58,7 +45,7 @@ func ReplyNotCreated(w http.ResponseWriter) {
 	w.WriteHeader(http.StatusConflict)
 }
 
-// UPDATE
+// UPDATE 
 func ReplyUpdated(w http.ResponseWriter) {
 	// StatusOK = 200 // RFC 7231, 6.3.1
 	w.WriteHeader(http.StatusOK)

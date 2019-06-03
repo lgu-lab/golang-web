@@ -1,20 +1,20 @@
-package controllers
+package mvc
 
 import (
 	"net/http"
 	
-	//"internal/web/controllers"  // keep full path for "go build"
+	controllers "internal/web/mvc/controllers"  // keep full path for "go build"
 )
 
-func InitControllers() {
+func InitMvcControllers() {
 
 	// Specific Paths with specific controllers 
 
-	languageController := NewLanguageController() 
+	languageController := controllers.NewLanguageController() 
 	http.HandleFunc("/language/list", languageController.ListHandler)
 	http.HandleFunc("/language/form", languageController.FormHandler)
 
-	studentController := NewStudentController() 
+	studentController := controllers.NewStudentController() 
 	http.HandleFunc("/student/list", studentController.ListHandler )
 	http.HandleFunc("/student/form", studentController.FormHandler )
 

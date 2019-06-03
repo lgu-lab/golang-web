@@ -1,7 +1,6 @@
-package restcontrollers
+package rest
 
 import (
-//	"encoding/json"
 	"net/http"
 	"strings"
 
@@ -44,7 +43,6 @@ func (this *LanguageRestController) Process(w http.ResponseWriter, r *http.Reque
 		this.processDELETE(w, r)
 		
 	default:
-//		webutil.ErrorPage(w, "Method "+r.Method+" is not supported")
 		http.Error(w, "", http.StatusBadRequest)
 	}
 }
