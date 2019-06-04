@@ -1,10 +1,10 @@
 package datamap
 
 import (
-	"log"
 	"sync"
 
 	"internal/entities"
+	"internal/log"
 )
 
 // Structure definition
@@ -17,7 +17,7 @@ var studentDataOnce sync.Once
 var studentDataMap  StudentDataMap
 
 func GetStudentDataMap() *StudentDataMap {
-	log.Printf("StudentDataMap - GetStudentDataMap() ")
+	log.Debug("StudentDataMap - GetStudentDataMap() ")
 	
 	// From Golang doc :
 	// "func (o *Once) Do(f func())"
@@ -30,7 +30,7 @@ func GetStudentDataMap() *StudentDataMap {
 }
 
 func newStudentDataMap() {
-	log.Printf("StudentDataMap - newStudentDataMap() ***** ")
+	log.Debug("StudentDataMap - newStudentDataMap() ***** ")
 	studentDataMap = StudentDataMap{
 		dataMap: make(map[int]entities.Student),
 		lock:    sync.RWMutex{},
@@ -38,7 +38,7 @@ func newStudentDataMap() {
 }
 
 func (this *StudentDataMap) Read(id int) *entities.Student {
-	log.Printf("StudentDataMap - read(%d) ", id)
+	log.Debug("StudentDataMap - read(%d) ", id)
 	this.lock.RLock()
 	defer this.lock.RUnlock()
 	student, exists := this.dataMap[id]
@@ -49,7 +49,7 @@ func (this *StudentDataMap) Read(id int) *entities.Student {
 	}
 }
 func (this *StudentDataMap) Exists(id int) bool {
-	log.Printf("StudentDataMap - exists(%d) ", id)
+	log.Debug("StudentDataMap - exists(%d) ", id)
 	this.lock.RLock()
 	defer this.lock.RUnlock()
 	_, exists := this.dataMap[id]
@@ -57,14 +57,14 @@ func (this *StudentDataMap) Exists(id int) bool {
 }
 
 func (this *StudentDataMap) Write(student entities.Student) {
-	log.Printf("StudentDataMap - write(%s) ", student.String())
+	log.Debug("StudentDataMap - write(%+v) ", student)
 	this.lock.Lock()
 	defer this.lock.Unlock()
 	this.dataMap[student.Id] = student
 }
 
 func (this *StudentDataMap) Remove(id int) {
-	log.Printf("StudentDataMap - remove(%d) ", id)
+	log.Debug("StudentDataMap - remove(%d) ", id)
 	this.lock.Lock()
 	defer this.lock.Unlock()
 	delete(this.dataMap, id) // delete in map

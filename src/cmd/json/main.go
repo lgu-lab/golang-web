@@ -23,7 +23,7 @@ func main() {
     // func Marshal(v interface{}) ([]byte, error)
     jsonData, err := json.Marshal(language)
 	if err != nil {
-	    fmt.Printf("Marshal error : " + language.String() )
+	    fmt.Printf("Marshal error : %v", language )
 		return
 	}
     fmt.Printf("JSON : %x \n", jsonData )

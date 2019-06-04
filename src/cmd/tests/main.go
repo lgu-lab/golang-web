@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"internal/entities"
 	"internal/log"
 )
 
@@ -22,6 +23,12 @@ func main() {
 
     log.Debug("aaaaa" )
     log.Debug("bb '%s' cc '%d' dd '%f'", "xxx", 123, 89.777 )
+    
+    language := entities.NewLanguage()
+    language.Code = "AA"
+    language.Name = "Bbbbbb"
+    log.Debug("language (v)  : %v ", language ) 
+    log.Debug("language (+v) : %+v ", language )
 }
 
 func f(format string, v ...interface{}) {

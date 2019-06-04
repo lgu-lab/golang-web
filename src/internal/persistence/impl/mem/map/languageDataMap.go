@@ -1,10 +1,10 @@
 package datamap
 
 import (
-	"log"
 	"sync"
 
 	"internal/entities"
+	"internal/log"
 )
 
 // Structure definition
@@ -17,7 +17,7 @@ var languageDataOnce sync.Once
 var languageDataMap  LanguageDataMap
 
 func GetLanguageDataMap() *LanguageDataMap {
-	log.Printf("LanguageDataMap - GetLanguageDataMap() ")
+	log.Debug("LanguageDataMap - GetLanguageDataMap() ")
 	
 	// From Golang doc :
 	// "func (o *Once) Do(f func())"
@@ -30,7 +30,7 @@ func GetLanguageDataMap() *LanguageDataMap {
 }
 
 func newLanguageDataMap() {
-	log.Printf("LanguageDataMap - newLanguageDataMap() ***** ")
+	log.Debug("LanguageDataMap - newLanguageDataMap() ***** ")
 	languageDataMap = LanguageDataMap{
 		dataMap: make(map[string]entities.Language),
 		lock:    sync.RWMutex{},
@@ -38,7 +38,7 @@ func newLanguageDataMap() {
 }
 
 func (this *LanguageDataMap) Read(code string) *entities.Language {
-	log.Printf("LanguageDataMap - read(%s) ", code)
+	log.Debug("LanguageDataMap - read(%s) ", code)
 	this.lock.RLock()
 	defer this.lock.RUnlock()
 	language, exists := this.dataMap[code]
@@ -49,7 +49,7 @@ func (this *LanguageDataMap) Read(code string) *entities.Language {
 	}
 }
 func (this *LanguageDataMap) Exists(code string) bool {
-	log.Printf("LanguageDataMap - exists(%s) ", code)
+	log.Debug("LanguageDataMap - exists(%s) ", code)
 	this.lock.RLock()
 	defer this.lock.RUnlock()
 	_, exists := this.dataMap[code]
@@ -57,14 +57,14 @@ func (this *LanguageDataMap) Exists(code string) bool {
 }
 
 func (this *LanguageDataMap) Write(language entities.Language) {
-	log.Printf("LanguageDataMap - write(%s) ", language.String())
+	log.Debug("LanguageDataMap - write(%+v) ", language)
 	this.lock.Lock()
 	defer this.lock.Unlock()
 	this.dataMap[language.Code] = language
 }
 
 func (this *LanguageDataMap) Remove(code string) {
-	log.Printf("LanguageDataMap - remove(%s) ", code)
+	log.Debug("LanguageDataMap - remove(%s) ", code)
 	this.lock.Lock()
 	defer this.lock.Unlock()
 	delete(this.dataMap, code) // delete in map

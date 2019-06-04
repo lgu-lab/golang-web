@@ -1,12 +1,11 @@
 package mvc
 
 import (
-	"log"
 	"net/http"
 	"strconv"
 	
 	"internal/entities"
-//	"internal/webutil"
+	"internal/log"
 	"internal/persistence"
 	"internal/persistence/dao"
 )
@@ -37,7 +36,7 @@ func NewStudentController() StudentController {
 
 
 func (this *StudentController) ListHandler(w http.ResponseWriter, r *http.Request) {
-	log.Print("ListHandler - URL path '" + r.URL.Path )
+	log.Debug("ListHandler - URL path '" + r.URL.Path )
 
 	if r.Method == "GET" {
 	    this.processList(w,r)
@@ -47,7 +46,7 @@ func (this *StudentController) ListHandler(w http.ResponseWriter, r *http.Reques
 }
 
 func (this *StudentController) FormHandler(w http.ResponseWriter, r *http.Request) {
-	log.Print("FormHandler - URL path '" + r.URL.Path )
+	log.Debug("FormHandler - URL path '" + r.URL.Path )
 
 	switch r.Method {
 	case "GET":
@@ -87,12 +86,12 @@ func (this *StudentController) processForm(w http.ResponseWriter, r *http.Reques
 }
 
 func (this *StudentController) processPost(w http.ResponseWriter, r *http.Request) {
-	log.Print("processPost " )
+	log.Debug("processPost " )
 	
     r.ParseForm() // Parse url parameters passed, then parse the POST body (request body)
     submit := r.Form.Get("submit")
 
-	log.Print("processPost submit = " + submit )
+	log.Debug("processPost submit = " + submit )
     
     switch submit {
     	case "create":
@@ -107,7 +106,7 @@ func (this *StudentController) processPost(w http.ResponseWriter, r *http.Reques
 }
 
 func (this *StudentController)  processCreate(w http.ResponseWriter, r *http.Request) {
-	log.Print("processCreate " )
+	log.Debug("processCreate " )
     
     student := this.buildStudent(r)
 	this.dao.Create(student) 
@@ -118,12 +117,12 @@ func (this *StudentController)  processCreate(w http.ResponseWriter, r *http.Req
 }
 
 func (this *StudentController)  processDelete(w http.ResponseWriter, r *http.Request) {
-	log.Print("processDelete " )
+	log.Debug("processDelete " )
     r.ParseForm() // Parse url parameters passed, then parse the POST body (request body)
     
     id, _ := strconv.Atoi( r.Form.Get("id") )
     
-	log.Printf("Delete : id = %d", id )
+	log.Debug("Delete : id = %d", id )
 	
 	this.dao.Delete(id) 
 
@@ -131,7 +130,7 @@ func (this *StudentController)  processDelete(w http.ResponseWriter, r *http.Req
 }
 
 func (this *StudentController)  processUpdate(w http.ResponseWriter, r *http.Request) {
-	log.Print("processUpdate " )
+	log.Debug("processUpdate " )
     student := this.buildStudent(r)
     
 	this.dao.Update(student) 
@@ -144,7 +143,7 @@ func (this *StudentController)  processUpdate(w http.ResponseWriter, r *http.Req
 func (this *StudentController)  buildStudent(r *http.Request) entities.Student {
     r.ParseForm() // Parse url parameters passed, then parse the POST body (request body)
 
-	log.Printf("buildStudent..." )
+	log.Debug("buildStudent..." )
     
     student := entities.Student { 
     	Id: FormGetParamAsInt(r, "id", 0),
@@ -153,8 +152,7 @@ func (this *StudentController)  buildStudent(r *http.Request) entities.Student {
     	Age: FormGetParamAsInt(r, "age", 0),
     	LanguageCode: r.Form.Get("languageCode") }
     
-    //log.Printf("Student built : " + student.ToString() )
-    log.Printf("Student built : " + student.String() )
+    log.Debug("Student built : %+v", student )
 	return student
 }
 

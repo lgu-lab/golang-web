@@ -1,6 +1,6 @@
 package entities
 
-import "fmt"
+//import "fmt"
 
 type Student struct {
 	Id        int 
@@ -10,15 +10,15 @@ type Student struct {
 	LanguageCode string
 }
 
-func (this Student) String() string {
-    return fmt.Sprintf(
-    	"[%d : %s, %s, %d, %s]", 
-    	this.Id, 
-    	this.FirstName, 
-    	this.LastName, 
-    	this.Age, 
-    	this.LanguageCode) 
-}
+//func (this Student) String() string {
+//    return fmt.Sprintf(
+//    	"[%d : %s, %s, %d, %s]", 
+//    	this.Id, 
+//    	this.FirstName, 
+//    	this.LastName, 
+//    	this.Age, 
+//    	this.LanguageCode) 
+//}
 
 //func NewStudent() Student {
 //	// new Student with default values ( 'zero values' )

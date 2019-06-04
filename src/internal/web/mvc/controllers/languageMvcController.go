@@ -1,11 +1,10 @@
 package mvc
 
 import (
-	"log"
 	"net/http"
 	
 	"internal/entities"
-//	"internal/webutil"
+	"internal/log"
 	"internal/persistence"
 	"internal/persistence/dao"
 )
@@ -29,7 +28,7 @@ func NewLanguageController() LanguageController {
 }
 
 func (this *LanguageController) ListHandler(w http.ResponseWriter, r *http.Request) {
-	log.Print("ListHandler - URL path '" + r.URL.Path )
+	log.Debug("ListHandler - URL path '" + r.URL.Path )
 
 	if r.Method == "GET" {
 	    this.processList(w,r)
@@ -39,7 +38,7 @@ func (this *LanguageController) ListHandler(w http.ResponseWriter, r *http.Reque
 }
 
 func (this *LanguageController) FormHandler(w http.ResponseWriter, r *http.Request) {
-	log.Print("FormHandler - URL path '" + r.URL.Path )
+	log.Debug("FormHandler - URL path '" + r.URL.Path )
 
 	switch r.Method {
 	case "GET":
@@ -77,12 +76,12 @@ func (this *LanguageController) processForm(w http.ResponseWriter, r *http.Reque
 }
 
 func (this *LanguageController) processPost(w http.ResponseWriter, r *http.Request) {
-	log.Print("processPost " )
+	log.Debug("processPost " )
 	
     r.ParseForm() // Parse url parameters passed, then parse the POST body (request body)
     submit := r.Form.Get("submit")
 
-	log.Print("processPost submit = " + submit )
+	log.Debug("processPost submit = " + submit )
     
     switch submit {
     	case "create":
@@ -97,7 +96,7 @@ func (this *LanguageController) processPost(w http.ResponseWriter, r *http.Reque
 }
 
 func (this *LanguageController)  processCreate(w http.ResponseWriter, r *http.Request) {
-	log.Print("processCreate " )
+	log.Debug("processCreate " )
     
     language := this.buildLanguage(r)
 	this.dao.Create(language) 
@@ -106,7 +105,7 @@ func (this *LanguageController)  processCreate(w http.ResponseWriter, r *http.Re
 }
 
 func (this *LanguageController)  processDelete(w http.ResponseWriter, r *http.Request) {
-	log.Print("processDelete " )
+	log.Debug("processDelete " )
     r.ParseForm() // Parse url parameters passed, then parse the POST body (request body)
     
 //    id, _ := strconv.Atoi( r.Form.Get("id") )
@@ -119,7 +118,7 @@ func (this *LanguageController)  processDelete(w http.ResponseWriter, r *http.Re
 }
 
 func (this *LanguageController)  processUpdate(w http.ResponseWriter, r *http.Request) {
-	log.Print("processUpdate " )
+	log.Debug("processUpdate " )
     language := this.buildLanguage(r)
 	this.dao.Update(language) 
 	formData := this.newFormData(false, language)
@@ -129,14 +128,14 @@ func (this *LanguageController)  processUpdate(w http.ResponseWriter, r *http.Re
 func (this *LanguageController)  buildLanguage(r *http.Request) entities.Language {
     r.ParseForm() // Parse url parameters passed, then parse the POST body (request body)
 
-	log.Printf("buildLanguage..." )
+	log.Debug("buildLanguage..." )
     
     language := entities.Language { 
     	Code: r.Form.Get("code"), 
     	Name: r.Form.Get("name"), 
     	}
     
-    log.Printf("Language built : " + language.String() )
+    log.Debug("Language built : %v ", language )
 	return language
 }
 
