@@ -4,7 +4,6 @@ import (
 	"internal/entities"
 	"internal/log"
 	"internal/persistence/dao"	
-	"internal/persistence/impl/mem/map"
 )
 
 //-----------------------------------------------------
@@ -13,7 +12,7 @@ import (
 
 // Structure definition
 type LanguageDAOMemory struct {
-	dataMap * datamap.LanguageDataMap
+	dataMap * LanguageDataMap
 }
 
 // Check interface implementation is valid
@@ -23,7 +22,7 @@ var _ dao.LanguageDAO = (*LanguageDAOMemory)(nil)
 func NewLanguageDAOMemory() LanguageDAOMemory {
 	log.Debug("NewLanguageDAOMemory()")
 	return LanguageDAOMemory{
-		dataMap: datamap.GetLanguageDataMap(),
+		dataMap: GetLanguageDataMap(),
 	}
 }
 

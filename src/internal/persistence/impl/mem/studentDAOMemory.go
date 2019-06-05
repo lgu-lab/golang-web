@@ -4,12 +4,11 @@ import (
 	"internal/entities"
 	"internal/log"
 	"internal/persistence/dao"	
-	"internal/persistence/impl/mem/map"
 )
 
 // Structure definition
 type StudentDAOMemory struct {
-	dataMap * datamap.StudentDataMap
+	dataMap * StudentDataMap
 }
 
 // Check interface implementation is valid
@@ -21,8 +20,8 @@ func NewStudentDAOMemory() StudentDAOMemory {
 	//dao := StudentDAOMemory{} // structure creation 
 	//dao.init() // structure init
 	//return dao
-	return StudentDAOMemory{
-		dataMap: datamap.GetStudentDataMap(),		
+	return StudentDAOMemory {
+		dataMap: GetStudentDataMap(),		
 	} 
 }
 

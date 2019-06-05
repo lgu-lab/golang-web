@@ -1,4 +1,4 @@
-package datamap
+package memdb
 
 import (
 	"sync"
@@ -38,10 +38,11 @@ func newLanguageDataMap() {
 }
 
 func (this *LanguageDataMap) Read(code string) *entities.Language {
-	log.Debug("LanguageDataMap - read(%s) ", code)
+	key := buildKey(code)
+	log.Debug("LanguageDataMap - read '%s' ", key)
 	this.lock.RLock()
 	defer this.lock.RUnlock()
-	language, exists := this.dataMap[code]
+	language, exists := this.dataMap[key]
 	if exists {
 		return &language
 	} else {
@@ -49,25 +50,28 @@ func (this *LanguageDataMap) Read(code string) *entities.Language {
 	}
 }
 func (this *LanguageDataMap) Exists(code string) bool {
-	log.Debug("LanguageDataMap - exists(%s) ", code)
+	key := buildKey(code)
+	log.Debug("LanguageDataMap - exists '%s' ", key)
 	this.lock.RLock()
 	defer this.lock.RUnlock()
-	_, exists := this.dataMap[code]
+	_, exists := this.dataMap[key]
 	return exists
 }
 
 func (this *LanguageDataMap) Write(language entities.Language) {
-	log.Debug("LanguageDataMap - write(%+v) ", language)
+	key := buildKey(language.Code)
+	log.Debug("LanguageDataMap - write '%s' : %+v ", key, language)
 	this.lock.Lock()
 	defer this.lock.Unlock()
 	this.dataMap[language.Code] = language
 }
 
 func (this *LanguageDataMap) Remove(code string) {
-	log.Debug("LanguageDataMap - remove(%s) ", code)
+	key := buildKey(code)
+	log.Debug("LanguageDataMap - remove '%s' ", key)
 	this.lock.Lock()
 	defer this.lock.Unlock()
-	delete(this.dataMap, code) // delete in map
+	delete(this.dataMap, key) // delete in map
 }
 
 func (this *LanguageDataMap) Values() []entities.Language {

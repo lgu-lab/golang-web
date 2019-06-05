@@ -1,4 +1,4 @@
-package datamap
+package memdb
 
 import (
 	"sync"
@@ -9,7 +9,7 @@ import (
 
 // Structure definition
 type StudentDataMap struct {
-	dataMap map[int]entities.Student // the map to store Student entities
+	dataMap map[string]entities.Student // the map to store Student entities
 	lock    sync.RWMutex
 }
 
@@ -32,16 +32,17 @@ func GetStudentDataMap() *StudentDataMap {
 func newStudentDataMap() {
 	log.Debug("StudentDataMap - newStudentDataMap() ***** ")
 	studentDataMap = StudentDataMap{
-		dataMap: make(map[int]entities.Student),
+		dataMap: make(map[string]entities.Student),
 		lock:    sync.RWMutex{},
 	}
 }
 
 func (this *StudentDataMap) Read(id int) *entities.Student {
-	log.Debug("StudentDataMap - read(%d) ", id)
+	key := buildKey(id)
+	log.Debug("StudentDataMap - read '%s' ", key)
 	this.lock.RLock()
 	defer this.lock.RUnlock()
-	student, exists := this.dataMap[id]
+	student, exists := this.dataMap[key]
 	if exists {
 		return &student
 	} else {
@@ -49,25 +50,28 @@ func (this *StudentDataMap) Read(id int) *entities.Student {
 	}
 }
 func (this *StudentDataMap) Exists(id int) bool {
-	log.Debug("StudentDataMap - exists(%d) ", id)
+	key := buildKey(id)
+	log.Debug("StudentDataMap - exists '%s' ", key)
 	this.lock.RLock()
 	defer this.lock.RUnlock()
-	_, exists := this.dataMap[id]
+	_, exists := this.dataMap[key]
 	return exists
 }
 
 func (this *StudentDataMap) Write(student entities.Student) {
-	log.Debug("StudentDataMap - write(%+v) ", student)
+	key := buildKey(student.Id)
+	log.Debug("StudentDataMap - write '%s' : %+v ", key, student)
 	this.lock.Lock()
 	defer this.lock.Unlock()
-	this.dataMap[student.Id] = student
+	this.dataMap[key] = student
 }
 
 func (this *StudentDataMap) Remove(id int) {
-	log.Debug("StudentDataMap - remove(%d) ", id)
+	key := buildKey(id)
+	log.Debug("StudentDataMap - remove '%s' ", key)
 	this.lock.Lock()
 	defer this.lock.Unlock()
-	delete(this.dataMap, id) // delete in map
+	delete(this.dataMap, key) // delete in map
 }
 
 func (this *StudentDataMap) Values() []entities.Student {
