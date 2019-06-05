@@ -63,7 +63,7 @@ func (this *LanguageDataMap) Write(language entities.Language) {
 	log.Debug("LanguageDataMap - write '%s' : %+v ", key, language)
 	this.lock.Lock()
 	defer this.lock.Unlock()
-	this.dataMap[language.Code] = language
+	this.dataMap[key] = language
 }
 
 func (this *LanguageDataMap) Remove(code string) {
