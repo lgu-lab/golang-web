@@ -56,6 +56,30 @@ func main() {
 	printArgs(getArgs("/a/b/c/", "/a/b"))
 	printArgs(getArgs("",        "/a/b/c/1"))
 	printArgs(getArgs("",        ""))
+	
+	fmt.Println("-----")
+	x := get1()
+	fmt.Printf("--> %v (type %T) \n", x, x )  //  abc (type string) 
+	y := get2()
+	fmt.Printf("--> %v (type %T) \n", y, y )  //  [2 3 5 7 11 13] (type [6]int) 
+	//var z []int 
+	// z = y.([]int)  // panic: interface conversion: interface {} is [6]int, not []int
+	var z [6]int // An array's length is part of its type (arrays cannot be resized)
+	z = y.([6]int)  
+	fmt.Printf("--> %v (type %T) \n", z, z )  //  [2 3 5 7 11 13] (type [6]int) 
+	
+	// z = get3() // cannot use get3() (type interface {}) as type [6]int in assignment: need type assertion
+	w := get3()
+	fmt.Printf("--> %v (type %T) \n", w, w )  //  [0 0 0] (type []int) 
+}
+func get1() interface{} {
+	return "abc"
+}
+func get2() interface{} {
+	return [6]int{2, 3, 5, 7, 11, 13} // array
+}
+func get3() interface{} {
+	return make([]int, 3) // slice
 }
 func printArgs(args []string) {
 	fmt.Printf("args : %v (size = %d)\n", args, len(args))
