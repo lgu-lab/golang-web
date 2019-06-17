@@ -2,6 +2,8 @@ package main
 
 import (
 	"fmt"
+	"strconv"
+	
 	"internal/entities"
 	"internal/log"
 	"strings"
@@ -71,7 +73,59 @@ func main() {
 	// z = get3() // cannot use get3() (type interface {}) as type [6]int in assignment: need type assertion
 	w := get3()
 	fmt.Printf("--> %v (type %T) \n", w, w )  //  [0 0 0] (type []int) 
+	
+	parseBool("true")
+	parseBool("True")
+	parseBool("TRUE")
+	parseBool("false") 
+
+	// bitSize : 0, 8, 16, 32, and 64 for  int, int8, int16, int32, and int64 
+	parseInt("123456", 10,  0)  
+	parseInt("123456", 10,  8)  // ERROR : value out of range 
+	parseInt("123456", 10, 16)  // ERROR : value out of range 
+	parseInt("123456", 10, 32) 
+	parseInt("123456", 10, 64) 
+	parseInt("12A3456", 10, 32)  // ERROR : invalid syntax
+	parseInt("12.3456", 10, 32)  // ERROR : invalid syntax
+
+	parseFloat("12.3456", 32)  //
+	parseFloat("12.3456", 64)  //
 }
+func parseBool(s string) {
+	fmt.Printf("ParseBool : '%s' ", s )  
+	b, err := strconv.ParseBool(s)
+	if ( err != nil ) {
+		fmt.Printf(" --> Error : %v (type %T) \n", err, err )  
+	}
+	fmt.Printf(" --> %v (type %T) \n", b, b )  
+}
+func parseInt(s string, base int, bitSize int) {
+	fmt.Printf("ParseInt : '%s', base=%d, bitSize=%d", s, base, bitSize )  
+	v, err := strconv.ParseInt(s, base, bitSize) // int64
+	if ( err != nil ) {
+		fmt.Printf(" --> Error : %v (type %T) \n", err, err )  
+	}
+	fmt.Printf(" --> %v (type %T) \n", v, v )  
+	var v32 int32
+	var v64 int64
+	v32 = int32(v)
+	v64 = int64(v)
+	fmt.Printf(" v32 = %v  v64 = %v  \n", v32, v64 )  
+}
+func parseFloat(s string, bitSize int) {
+	fmt.Printf("ParseInt : '%s', bitSize=%d", s, bitSize )  
+	v, err := strconv.ParseFloat(s, bitSize) // float64
+	if ( err != nil ) {
+		fmt.Printf(" --> Error : %v (type %T) \n", err, err )  
+	}
+	fmt.Printf(" --> %v (type %T) \n", v, v )  
+	var v32 float32
+	var v64 float64
+	v32 = float32(v)
+	v64 = float64(v)
+	fmt.Printf(" v32 = %v  v64 = %v  \n", v32, v64 )  
+}
+
 func get1() interface{} {
 	return "abc"
 }
